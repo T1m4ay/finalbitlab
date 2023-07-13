@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="siteContent">
+    <input type="hidden" id = "gameId">
+    <div class="col border p-2">
+        <div id="gameListBody">
+        </div>
+        <div class="modal fade" id="detailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" sec:authorize="!hasAnyRole('ROLE_ADMIN')">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Game Details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>NAME : </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" readonly class="form-control" id="gameNameDetails">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>DESCRIPTION : </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <textarea class="form-control" readonly id="descriptionDetails"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>AUTHOR : </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" readonly class="form-control" id="authorDetails">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>GENRE : </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" readonly class="form-control" id="genreDetails">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CLOSE</button>
+                        <button type="button" class="btn btn-primary">OK</button>
+                    </div>
+                </div>
+                <div class="modal-content" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Course Details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>NAME : </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" class="form-control" id="gameNameDetails">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>DESCRIPTION : </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <textarea class="form-control" id="descriptionDetails"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>AUTHOR : </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <input type="text" class="form-control" id="authorDetails">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>GENRE : </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <select name="Genre" id="genreDetails">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="deleteGame()">DELETE</button>
+                        <button type="button" class="btn btn-primary" onclick="updateGame()">SAVE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        loadGames();
+
+        function loadGames() {
+
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open("GET", "/games", true);
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+
+                    let gameList = JSON.parse(httpRequest.responseText);
+
+                    let content = "";
+                    for (let i = 0; i < gameList.length; i++) {
+                        content += "<p class='fs-5'><span th:if='${" + gameList[i].handled + " == false}' class='text-danger'>*(New)</span> " + gameList[i].gameName + "</p>";
+                        content += "<div className='pt-2 fs-6'>";
+                        content += "<p>Application from: " + gameList[i].author + "</p>";
+                        content += "<p>" + gameList[i].description + "</p>";
+                        content += "</div>";
+                        content += "<div>";
+                        content += "Genre: " + gameList[i].genre.name;
+                        content += "<br>";
+                        content += "</div>";
+                        content += "<button class='btn btn-primary btn-sm' onclick='openGameDetailsModal(" + gameList[i].id + ")'>DETAILS</button>";
+                    }
+                    console.log(gameList);
+                    document.getElementById("gameListBody").innerHTML = content;
+                }
+            }
+            httpRequest.send();
+        }
+
+        function openGameDetailsModal(id){
+
+            detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open("GET", "/games/"+id, true);
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                    let result = JSON.parse(httpRequest.responseText);
+                    gameNameDetails.value = result.gameName;
+                    descriptionDetails.value = result.description;
+                    authorDetails.value = result.author;
+                    genreDetails.value = result.genre.name;
+                    gameId.value = result.id;
+
+                    detailsModal.show();
+
+                }
+            }
+            httpRequest.send();
+        }
+
+        function updateGame(){
+
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open("PUT", "/games", true);
+            httpRequest.setRequestHeader("Content-Type", "application/json");
+
+            let gameId = document.getElementById("gameId");
+            let gameName = document.getElementById("gameNameDetails");
+            let description = document.getElementById("descriptionDetails");
+            let author = document.getElementById("authorDetails");
+            let genre = document.getElementById("genreDetails");
+
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                    loadGames();
+                }
+            };
+
+            let body = {
+                'id' : gameId.value,
+                'gameName': gameName.value,
+                'description' : description.value,
+                'author' : author.value,
+                'genre' : genre.value
+            };
+
+            body = JSON.stringify(body);
+            httpRequest.send(body);
+        }
+
+        function deleteGame(){
+
+            let approve = confirm("Are you sure?");
+
+            if(approve){
+
+                let gameId = document.getElementById("gameId");
+
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("DELETE", "/games/"+gameId.value, true);
+
+                httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                        detailsModal.hide();
+                        loadGames();
+                    }
+                };
+
+                httpRequest.send();
+            }
+
+        }
+
+        genreList();
+
+        function genreList() {
+
+            const httpRequest = new XMLHttpRequest();
+            httpRequest.open("GET", "/genre", true);
+            httpRequest.onreadystatechange = function () {
+                if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+
+                    let genreList = JSON.parse(httpRequest.responseText);
+
+                    let content = "";
+                    for (let i = 0; i < genreList.length; i++) {
+                        content += "<option th:value='${" + genreList[i].id + "}'>" + genreList[i].id + "</option>";
+                    }
+                    console.log(genreList);
+                    document.getElementById("genreDetails").innerHTML = content;
+                }
+            }
+            httpRequest.send();
+        }
+
+    </script>
+</div>
+</html>
