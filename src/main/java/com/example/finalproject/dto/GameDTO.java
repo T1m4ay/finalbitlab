@@ -4,8 +4,6 @@ import com.example.finalproject.model.Genre;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 public class GameDTO {
@@ -13,7 +11,9 @@ public class GameDTO {
     private Long id;
     private String gameName;
     private String description;
+    private Boolean handled;
     private String author;
-    private Genre genre;
+    private String genre;
+
 
 }

@@ -13,6 +13,7 @@ import lombok.*;
 public class Genre {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 

@@ -16,6 +16,8 @@
                   <button class="dropdown-item">Logout</button>
                  </form>
                </li>
+              <li><a class="dropdown-item" th:href="@{/password-edit-page}">Update Password</a></li>
+              <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
             </ul>
           </li>
           <li class="nav-item" sec:authorize="isAnonymous()">
@@ -27,11 +29,8 @@
           <li class="nav-item">
             <a class="nav-link text-white" aria-current="page" th:href="@{/}">Games</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" aria-current="page" th:href="@{/games_genre}">Genre</a>
-          </li>
           <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN')">
-            <a class="nav-link text-white" aria-current="page" th:href="@{/applications}">Applications</a>
+            <a class="nav-link text-white" aria-current="page" th:href="@{/games_genre}">Genre</a>
           </li>
         </ul>
       </div>

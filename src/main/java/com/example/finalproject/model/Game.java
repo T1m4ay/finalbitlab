@@ -27,7 +27,6 @@ public class Game {
     @Column(name = "author")
     private String author;
 
-    @ManyToOne
-    private Genre genre;
+    private String genre;
 
 }
