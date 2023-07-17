@@ -32,11 +32,11 @@ CREATE TABLE t_game_genre (
 );
 
 ALTER TABLE t_users_roles
-    ADD CONSTRAINT fk_t_users_roles_user_id
+    ADD CONSTRAINT fk_t_users_roles_t_users
         FOREIGN KEY (user_id)
             REFERENCES t_users (id);
 
 ALTER TABLE t_users_roles
-    ADD CONSTRAINT fk_t_users_roles_role_id
+    ADD CONSTRAINT fk_t_users_roles_t_role
         FOREIGN KEY (role_id)
             REFERENCES t_role (id);
