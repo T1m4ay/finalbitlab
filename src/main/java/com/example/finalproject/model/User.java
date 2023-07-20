@@ -30,11 +30,11 @@ public class User implements UserDetails {
     private String fullName;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    private List<Role> role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles;
+        return this.role;
     }
 
     @Override

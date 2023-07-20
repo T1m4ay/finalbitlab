@@ -8,6 +8,14 @@
         <input type="hidden" id = "genreId">
         <div class="row mb-3">
             <div class="col-6 mx-auto">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if = "${param.passworderror!=null}">
+                    This genre already exists!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if = "${param.success!=null}">
+                    Genre successfully added!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <div class="row mt-3">
                     <div class="col-12">
                         <label>NAME : </label>
@@ -28,11 +36,24 @@
             <script type="text/javascript">
                 function addGenre() {
 
+                    let addGenre = document.getElementById("addGenre");
+                    let genreName = addGenre.value.trim();
+
+                    if (genreName === "") {
+                        alert("Genre name cannot be empty.");
+                        return;
+                    }
+
+                    for (let i = 0; i < genreList.length; i++) {
+                        if(genreList[i].genreName == genreName){
+                            alert("This genre already exists.");
+                            return;
+                        }
+                    }
+
                     const httpRequest = new XMLHttpRequest();
                     httpRequest.open("POST", "/genre", true);
                     httpRequest.setRequestHeader("Content-Type", "application/json");
-
-                    let addGenre = document.getElementById("addGenre");
 
                     httpRequest.onreadystatechange = function () {
                         if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
@@ -40,14 +61,11 @@
                             loadGenres();
                         }
                     };
-
                     let body = {
                         'genreName': addGenre.value,
                     };
-
                     body = JSON.stringify(body);
                     httpRequest.send(body);
-
                 }
             </script>
         </div>
@@ -69,6 +87,8 @@
         <script type="text/javascript">
             loadGenres();
 
+            let genreList;
+
             function loadGenres() {
 
                 const httpRequest = new XMLHttpRequest();
@@ -76,7 +96,7 @@
                 httpRequest.onreadystatechange = function () {
                     if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
 
-                        let genreList = JSON.parse(httpRequest.responseText);
+                        genreList = JSON.parse(httpRequest.responseText);
 
                         let tableContent = "";
                         for (let i = 0; i < genreList.length; i++) {

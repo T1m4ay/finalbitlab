@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Transactional
 public interface GenreRepository extends JpaRepository<Genre, Long>  {
+    Genre findByName(String name);
 }

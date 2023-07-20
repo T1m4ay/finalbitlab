@@ -50,15 +50,19 @@
 
             <script type="text/javascript">
                 function addGame() {
-
-                    const httpRequest = new XMLHttpRequest();
-                    httpRequest.open("POST", "/games", true);
-                    httpRequest.setRequestHeader("Content-Type", "application/json");
-
                     let addGameName = document.getElementById("addGameName");
                     let addDescription = document.getElementById("addDescription");
                     let author = document.getElementById("currentUserName");
                     let addGenre = document.getElementById("addGenre");
+                    let gameName = addGameName.value.trim();
+                    if (gameName === "") {
+                        alert("Game name cannot be empty.");
+                        return;
+                    }
+
+                    const httpRequest = new XMLHttpRequest();
+                    httpRequest.open("POST", "/games", true);
+                    httpRequest.setRequestHeader("Content-Type", "application/json");
 
                     httpRequest.onreadystatechange = function () {
                         if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
@@ -71,16 +75,15 @@
                     };
 
                     let body = {
-                        'gameName': addGameName.value,
-                        'description' : addDescription.value,
-                        'author' : author.value,
-                        'genre' : addGenre.value,
-                        'handled' : false
+                        'gameName': gameName,
+                        'description': addDescription.value,
+                        'author': author.value,
+                        'genre': addGenre.value,
+                        'handled': false
                     };
 
                     body = JSON.stringify(body);
                     httpRequest.send(body);
-
                 }
             </script>
         </div>

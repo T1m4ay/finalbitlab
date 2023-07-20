@@ -5,13 +5,13 @@ VALUES
 
 INSERT INTO t_users (email, full_name, password)
 VALUES
-    ('tero4y@gmail.com', 'Tima Daulet', '$2a$10$H3QcgvygixA4w0fRfti8QewVF32d6GzcFYKghWbjQ'),
-    ('29607@gmail.com', 'Temirlan Dauletkhanov', '$2a$10$dAq13yyj0eoAtah7ntavgOUGLSpALqII3e0hq8RFZRpYM4pz0elgG');
+    ('tero4y@gmail.com', 'Tima Daulet', '$2a$10$TybLhh7EgZR5T1bqGDrEP.CHeGq0w2OWBhXvNp5RKu2xLqz0TzmoG'),
+    ('29607@gmail.com', 'Temirlan Dauletkhanov', '$2a$10$yi6eYOxZK.ZZWJEdPEvAEujXI.4XO7SOFhCFm7Z/wCpAm1SAomOo2');
 
-INSERT INTO t_users_roles (user_id, role_id)
+INSERT INTO t_users_role (user_id, role_id)
 VALUES
-    (1,2),
-    (2,1);
+    (1,1),
+    (2,2);
 
 INSERT INTO t_game (author, description, name, genre, handled)
 VALUES
@@ -20,7 +20,7 @@ VALUES
     ('Temirlan Dauletkhanov', 'FIFA 23 features the mens World Cup game mode and the womens World Cup game mode, replicating the 2022 FIFA World Cup and the 2023 FIFA Womens World Cup. ', 'FIFA 23', 'Sport', false),
     ('Temirlan Dauletkhanov', 'In God of War, players control Kratos, a Spartan warrior who is sent by the Greek gods to kill Ares, the god of war. As the story progresses, Kratos is revealed to be Ares'' former servant, who had been tricked into killing his own family and is haunted by terrible nightmares.', 'God of war', 'Adventure', true);
 
-INSERT INTO t_game_genre (name)
+INSERT INTO t_game_genre (g_name)
 VALUES
     ('RPG'),
     ('Shooter'),

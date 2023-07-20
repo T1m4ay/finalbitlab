@@ -27,6 +27,7 @@ public class Game {
     @Column(name = "author")
     private String author;
 
+    @Column(name = "genre")
     private String genre;
 
 }

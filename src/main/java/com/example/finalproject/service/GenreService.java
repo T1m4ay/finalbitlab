@@ -16,6 +16,11 @@ public class GenreService {
     private final GenreRepository genreRepository;
     private final GenreMapper genreMapper;
 
+    public Genre findByName(String name){
+        Genre genre = genreRepository.findByName(name);
+        return genre;
+    }
+
     public List<GenreDTO> getGenres(){
         return genreMapper.toDtoList(genreRepository.findAll());
     }

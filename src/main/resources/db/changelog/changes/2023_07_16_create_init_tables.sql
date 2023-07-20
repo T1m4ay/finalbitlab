@@ -10,7 +10,7 @@ CREATE TABLE t_users (
                          password VARCHAR(255)
 );
 
-CREATE TABLE t_users_roles (
+CREATE TABLE t_users_role (
                                user_id SERIAL,
                                role_id SERIAL,
                                FOREIGN KEY (user_id) REFERENCES t_users (id),
@@ -28,15 +28,15 @@ CREATE TABLE t_game (
 
 CREATE TABLE t_game_genre (
                               id SERIAL PRIMARY KEY,
-                              name VARCHAR(255)
+                              g_name VARCHAR(255)
 );
 
-ALTER TABLE t_users_roles
-    ADD CONSTRAINT fk_t_users_roles_t_users
+ALTER TABLE t_users_role
+    ADD CONSTRAINT fk_t_users_role_t_users
         FOREIGN KEY (user_id)
             REFERENCES t_users (id);
 
-ALTER TABLE t_users_roles
-    ADD CONSTRAINT fk_t_users_roles_t_role
+ALTER TABLE t_users_role
+    ADD CONSTRAINT fk_t_users_role_t_role
         FOREIGN KEY (role_id)
             REFERENCES t_role (id);

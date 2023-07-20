@@ -1,6 +1,8 @@
 package com.example.finalproject.controller;
 
+import com.example.finalproject.model.Role;
 import com.example.finalproject.model.User;
+import com.example.finalproject.service.RoleService;
 import com.example.finalproject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,11 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class HomeController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping(value = "/")
     public String indexPage() {
@@ -53,9 +61,13 @@ public class HomeController {
                            @RequestParam(name = "user_full_name") String fullName) {
         if (password.equals(repeatPassword)) {
             User user = new User();
+            List<Role> roles = new ArrayList<>();
+            Role role = roleService.getRole(2L);
+            roles.add(role);
             user.setEmail(email);
             user.setFullName(fullName);
             user.setPassword(password);
+            user.setRole(roles);
             User newUser = userService.addUser(user);
             if (newUser != null) {
                 return "redirect:/register-page?success";
